@@ -16,7 +16,7 @@ contract DirectTransfer {
     address owner; //who ever is starting the transaction is the owner
 
     // Introducing the Rupee to OurCoin conversion rate
-    uint256 public rupee_to_OurCoin_conversionRate = 100;
+    uint256 public rupee_to_OurCoin_conversionRate = 1;
 
     //how many OurCoin is there in the sender's wallet
     mapping(address => uint256) walletBalance;
