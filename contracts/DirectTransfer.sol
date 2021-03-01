@@ -13,6 +13,7 @@ contract DirectTransfer {
     }
 
     Transaction[] transactions;
+   
     address owner; //who ever is starting the transaction is the owner
 
     // Introducing the Rupee to OurCoin conversion rate
@@ -20,6 +21,7 @@ contract DirectTransfer {
 
     //how many OurCoin is there in the sender's wallet
     mapping(address => uint256) walletBalance;
+    mapping(address=>uint) lastTimestamp;
 
     function sendToForeignBank(
         address senderBankAddress,
@@ -37,8 +39,8 @@ contract DirectTransfer {
                 senderUser,
                 receiverUser,
                 amount,
-                1
-            );
+                block.timestamp
+            ); 
         transactions.push(transaction);
         walletBalance[msg.sender] -= amount;
         walletBalance[receiverBankAddress] += amount;
@@ -58,27 +60,58 @@ contract DirectTransfer {
         //send the money from this wallet to this particular bank with sendUser and receiverUser info
     }
 
-    function getPendingTransactions()
-        public
-        view
-        returns (Transaction[] memory)
+     function getTransactionLength() public view  returns (uint)
     {
-        //   Transaction[] memory pendingTransactions=new Transaction[](transactions.length+1);
+        // setPendingTransactions();   
+        return transactions.length;
 
-        //   uint index=0;
-        //   for(uint i=0;i<transactions.length;i++)
-        //   {
-        //       if(transactions[i].timeStamp>timeStampAfterWhichTransactionsArePending)
-        //       {
-        //           pendingTransactions[index]=transactions[i];
-        //           index=index+1;
-        //       }
-        //   }
-        //using in arguments: uint256 timeStampAfterWhichTransactionsArePending
-        return transactions;
     }
+
+    function getTransactionByIndex(uint index) public view returns(address,address,string memory,string memory,uint,uint)
+    {
+        Transaction memory t=transactions[index];
+            return (t.senderBankAddress,t.receiverBankAddress,t.senderUser,t.receiverUser,t.amount,t.timeStamp);
+    }
+
+    function getLastPendingTransactionTimestamp(address adrs) public view returns(uint)
+    {
+        return lastTimestamp[adrs];
+    }
+
+    function setLastPendingTransactionTimestamp(address adrs,uint timestampToSet) public 
+    {
+        lastTimestamp[adrs]=timestampToSet;
+    }
+    // function setPendingTransactions ()  public
+    // {
+    //       uint timeStampAfterWhichTransactionsArePending=lastTimestamp[msg.sender];
+    //       pendingTransactions=new Transaction[](transactions.length);
+
+    //       uint index=0;
+    //       for(uint i=0;i<transactions.length;i++)
+    //       {
+    //           if(transactions[i].receiverBankAddress!=msg.sender) continue;
+
+    //           if(transactions[i].timeStamp>timeStampAfterWhichTransactionsArePending)
+    //           {
+    //               pendingTransactions[index]=transactions[i];
+    //               index=index+1;
+    //           }
+    //       }
+
+    //       pendingTransactionsLength=index;
+    //     //using in arguments: uint256 timeStampAfterWhichTransactionsArePending
+         
+    // }
+
+
+
 
     function getBalance() public view returns (uint256) {
         return walletBalance[msg.sender];
     }
 }
+
+// gett length from transaction
+// 3
+// 0

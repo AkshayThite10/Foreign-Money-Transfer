@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Conference DApp</title>
+    <title>Direct Transfer </title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
     
  
@@ -12,10 +12,36 @@
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
     <script src="js/app.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>  
+    <style>
+      .pendingTransactions
+      {
+        border: 2px solid red;
+        padding: 4px;
+
+      }
+
+      body{
+        margin: 20px;
+        align-items: center;
+      }
+    </style>
 </head>
 <body>
-  <h1>Your Address is :</h1>
-  <p id="currentAddress"></p>
+  
+  <div class="card-columns">
+      <div class="card bg-primary text-white text-center p-3 ml-5">
+      <blockquote class="blockquote mb-0">
+        <h1>Your Address is :</h1>
+                <footer class="footer">
+                  <p id="currentAddress"></p>
+        </footer>
+      </blockquote>
+    </div>
+  </div>
+  
+  
+  
 
   <div>
     <button class="btn btn-primary" onclick="getBalance()">Balance</button>
@@ -23,18 +49,39 @@
      id="balance">Your balance</span>
   </div>
 <hr>
+<!--  -->
+<div class="input-group mb-1">
+  <input type="number" name="moneyCredit" id="moneyCredit"  class="form-control" placeholder="Amount in rupees" aria-label="Recipient's username" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    
+    
+    <span class="input-group-text" id="basic-addon2"> 
+      <button class="btn btn-primary" onclick="addRupeeToWallet(moneyCredit.value)">Credit money in wallet</button>
+    </span>
+  </div>
+</div>
+<!--  -->
+ 
+<!--  -->
   <div>
-    <input type="number" name="moneyCredit" id="moneyCredit" placeholder="Amount in rupees">
-    <button class="btn btn-primary" onclick="addRupeeToWallet(moneyCredit.value)">Credit money in wallet</button>
       
   </div>
      
      
   <br>
   <div>
-    <input type="number" name="moneyDebit" id="moneyDebit" placeholder="Amount in rupees">
-    <button class="btn btn-primary" onclick="debitFromWallet(moneyDebit.value)">Debit money from wallet</button>
-      
+    <div class="input-group mb-1">
+      <input type="number" name="moneyDebit" id="moneyDebit" placeholder="Amount in rupees" aria-label="Recipient's username" aria-describedby="basic-addon2">
+      <div class="input-group-append">
+        
+        
+        <span class="input-group-text" id="basic-addon2"> 
+          <button class="btn btn-primary" onclick="debitFromWallet(moneyDebit.value)">Debit money from wallet</button>
+        </span>
+      </div>
+    </div>
+ 
+   
   </div>
 <br><br>
      <input type="text" name="receiverBankAddress" id="receiverBankAddress" placeholder="Receiver Bank Address">
@@ -42,8 +89,11 @@
     <input type="text" name="receiverUser" id="receiverUser" placeholder="Receiver User">
     <input type="number" name="amount" id="amount" placeholder="Amount">
      
-   <button id="transaction" onclick="sendToForeignBank()" >Send Money receiver bank</button>
+   <button class="btn btn-outline-success " id="transaction" onclick="sendToForeignBank()" >Send Money to receiver's bank</button>
      
-
+   <br><hr>
+   <br>
+   <button class="btn btn-outline-primary mb-5" id="pendingTransactionsBtn" onclick="getPendingTransactions()">Get Pending Transactions</button>
+  <span id="pendingTransactions"></span>
 </body>
 </html>

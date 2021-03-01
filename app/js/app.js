@@ -1,8 +1,13 @@
-var myConferenceInstance;
-var defaultAccount;
  
 
-window.onload = function() {
+var myConferenceInstance;
+var defaultAccount;
+let lastPendingTransactionTimestamp;
+let pendingTransaction=[];
+let finalPendingTransactions=[];
+ 
+
+window.onload =  function() {
     web3Provider=null;
     if (typeof web3 !== 'undefined') {
         web3Provider = window.ethereum;   //metamask
@@ -17,6 +22,8 @@ window.onload = function() {
     accounts = web3.eth.accounts;
     web3.eth.defaultAccount = web3.eth.accounts[0]
     defaultAccount=web3.eth.accounts[0];
+
+
     
     
     //  console.log('Initializing Event Tickets DApp');
@@ -31,15 +38,18 @@ async function initializeConference() {
     var DirectTransferArtifact = data;
     DirectTransfer = TruffleContract(DirectTransferArtifact);
 
+
     // Set the provider for our contract.
     DirectTransfer.setProvider(web3Provider);
     // console.log('Here');
     // console.log('Event Tickets', DirectTransfer);
     DirectTransfer.deployed().then(
-    function(instance) {
+      function(instance) {
         // console.log('Event Tickets contract instance', instance);
         myConferenceInstance = instance;   
         $("#currentAddress").html(defaultAccount); 
+         myConferenceInstance.getLastPendingTransactionTimestamp(defaultAccount).then((e)=>{lastPendingTransactionTimestamp=e.c[0]; });
+
         // $("#act").html(myConferenceInstance.address);
         // console.log('The contract address', instance.address);
         // debitFromWallet(1000);
@@ -130,7 +140,105 @@ async function sendToForeignBank()
     );
 }
 
-function getPendingTransactions()
+async function getPendingTransactions()
 {
+    let lengthOfTransactionArray=await myConferenceInstance.getTransactionLength();
+    let pt=[];
+    while(lengthOfTransactionArray>0)
+    {
+        lengthOfTransactionArray--;
+            pt.push(await myConferenceInstance.getTransactionByIndex(lengthOfTransactionArray));
+        
+    }
+    
+    filterOurPendingTransaction(pt);
+    
+}
+
+function filterOurPendingTransaction(pt)
+{
+    
+    const currentAddress=defaultAccount;
+    const len=pt.length;
+
+
+
+    for(let i=0;i<len;i++)
+    {
+        // console.log(pt[i]);
+        if(pt[i][1]!=currentAddress || pt[i][5].c[0]<lastPendingTransactionTimestamp) continue;
+
+        finalPendingTransactions.push(pt[i]);  //new pending transaction
+        
+         
+    }
+
+    displayPendingTransactions();
+ 
+}
+//have pending transactions on the ui and make a button to update the timestamp and remove the soled trnsactions from the ui
+function displayPendingTransactions()
+{
+    const mainDiv=document.getElementById("pendingTransactions");
+
+    const len=finalPendingTransactions.length;
+    const parentDiv=document.createElement("div");
+        parentDiv.setAttribute("identifyBy","box");
+
+        if(mainDiv.hasChildNodes())
+            mainDiv.removeChild(parentDiv);
+
+    while (mainDiv.firstChild) {
+        mainDiv.removeChild(mainDiv.firstChild);
+    }
+
+    for(let i=0;i<len;i++)
+    {
+        var timestamp=finalPendingTransactions[i][5];
+                if(timestamp.c[0]<=parseInt(lastPendingTransactionTimestamp)) continue;
+        var div=document.createElement("div");
+                div.className="pendingTransactions ";
+                div.setAttribute("index",i);
+                
+                var senderBankAddress=finalPendingTransactions[i][0];
+                div.setAttribute("id",timestamp);
+                var receiverBankAddress=finalPendingTransactions[i][1];
+                var senderUser=finalPendingTransactions[i][2];
+                var receiverUser=finalPendingTransactions[i][3];
+                var amount=finalPendingTransactions[i][4];
+                
+                div.setAttribute("timestamp",timestamp);
+                let p=document.createElement("p");
+                    p.innerHTML="Sender Bank: "+senderBankAddress+
+                                "</br>Amount received: "+amount;
+                    var btn=document.createElement("button");
+                            btn.textContent="Complete"
+                            btn.setAttribute("onclick","deleteThisTransaction(this)");
+                            btn.className=" btn btn-outline-danger";
+                            btn.setAttribute("id",timestamp);
+            div.appendChild(p); 
+            div.appendChild(btn);
+            parentDiv.appendChild(div);
+           
+    }
+    
+    mainDiv.appendChild(parentDiv);
+    
+    
+
+}
+
+
+function deleteThisTransaction(arg)
+{
+    let senderBankAddress=arg.id;
+    var el=document.getElementById(senderBankAddress);
+    // console.log(el)
+    var prnt=el.parentElement;
+    lastPendingTransactionTimestamp=el.getAttribute("timestamp");
+    console.log(lastPendingTransactionTimestamp);
+    myConferenceInstance.setLastPendingTransactionTimestamp(defaultAccount,parseInt(lastPendingTransactionTimestamp)).then(console.log("successfully update the timestamp"));
+    prnt.removeChild(el);
+    finalPendingTransactions.splice(prnt.tabIndex,1);   
     
 }
