@@ -1,0 +1,65 @@
+.address__title {
+    padding-top: 10px;
+    width: 500px;
+}
+
+.card-columns {
+    margin-left: 290px;
+    width: 2000px;
+}
+
+#balance {
+    color: gray;
+    border: 1px solid gray;
+    border-width: 50;
+    border-radius: 2px;
+    padding: 9px;
+    margin-left: 5px;
+}
+
+.div__balance {
+    display: flex;
+    margin: 10px;
+    margin-right: 45px;
+}
+
+.input-group-append {
+    margin-right: 15px;
+}
+
+#moneyCredit {
+    margin-left: 15px;
+}
+
+#moneyDebit {
+    margin-left: 15px;
+    padding-left: 13px;
+    width: 1046px;
+    border: 1px solid rgb(206, 197, 197);
+    border-radius: 5px;
+}
+
+.sendMoney {
+    margin-left: 65px;
+    margin-top: 12px;
+    width: 1200px;
+}
+
+.sendMoney_subTag {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#pendingTransactionsBtn {
+    margin-left: 15px;
+}
+
+#transaction {
+    padding: 10px;
+}
+
+.pendingTransactions {
+    border: 2px solid red;
+    padding: 4px;
+}

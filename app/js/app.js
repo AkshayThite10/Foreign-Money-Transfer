@@ -55,7 +55,7 @@ async function initializeConference() {
         // debitFromWallet(1000);
         // sendToForeignBank(defaultAccount,receiverBankAddress,s1,s2,amount);
         // addRupeeToWallet(1);
-        // getBalance();
+        getBalance();
          
     }).catch(
         function(err) {
@@ -93,7 +93,8 @@ function addRupeeToWallet(arg)
          alert('Please input valid number');
          return;
      }
-    myConferenceInstance.addRupeeToWallet(rupeeToAddInWallet).then(getBalance(),()=>console.log("Failed request.."));
+    myConferenceInstance.addRupeeToWallet(rupeeToAddInWallet).then(()=>
+        getBalance(),()=>console.log("Failed request.."));
 }
 
 async function debitFromWallet(arg)
@@ -108,7 +109,8 @@ async function debitFromWallet(arg)
         alert('Your balance is low');
         return;
      }  
-    myConferenceInstance.debitFromWallet(rupeeToDebitFromWallet).then(getBalance());
+    myConferenceInstance.debitFromWallet(rupeeToDebitFromWallet).then(()=>
+    getBalance(),()=>console.log("Failed request.."));
 } 
 
 async function sendToForeignBank()
@@ -180,8 +182,11 @@ function filterOurPendingTransaction(pt)
 function displayPendingTransactions()
 {
     const mainDiv=document.getElementById("pendingTransactions");
-
+    let displaySign=0;
     const len=finalPendingTransactions.length;
+
+    //
+
     const parentDiv=document.createElement("div");
         parentDiv.setAttribute("identifyBy","box");
 
@@ -199,6 +204,7 @@ function displayPendingTransactions()
         var div=document.createElement("div");
                 div.className="pendingTransactions ";
                 div.setAttribute("index",i);
+                displaySign++;
                 
                 var senderBankAddress=finalPendingTransactions[i][0];
                 div.setAttribute("id",timestamp);
@@ -222,6 +228,9 @@ function displayPendingTransactions()
            
     }
     
+
+    if(displaySign==0) {alert("No transaction is pending.."); return;}
+
     mainDiv.appendChild(parentDiv);
     
     
