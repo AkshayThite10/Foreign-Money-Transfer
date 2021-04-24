@@ -78,7 +78,8 @@ async function getBalance()
     
     setTimeout(()=>{
         myConferenceInstance.getBalance().then(
-            e=> $("#balance").html(e.c[0])
+            e=> {$("#balance").html(e.c[0]);
+            return e.c[0];}
     )
     },1000
     );
@@ -130,16 +131,35 @@ async function sendToForeignBank()
 
     // console.log(receiverBankAddress,senderUser,receiverUser,amount);
 
-    const bl=await getBalance();
-     if(bl<amount){
-        alert('Your balance is low');
-        return;
-     }  
+     
+     
+
+    // console.log(getBalance().then(e=>{return e;})); 
+
+    
+    getBalance().then((e)=>alert(e));
+    
+    //  getBalance().then((bl)=> console.log(bl)
+    //  {
+    //      if(bl<amount)
+    //      {
+    //         alert('Your balance is low');
+    //         return;
+    //      }
+    //      else
+    //      {
+    //          console.log(bl,"=>",amount);
+    // //          myConferenceInstance.sendToForeignBank(defaultAccount,receiverBankAddress,senderUser,receiverUser,amount).then(
+    // //     getBalance()
+    // // );
+    //      }
+    // }
+    //   );
 
      // defaultAccount,receiverBankAddress,s1,s2,amount
-    myConferenceInstance.sendToForeignBank(defaultAccount,receiverBankAddress,senderUser,receiverUser,amount).then(
-        getBalance()
-    );
+     myConferenceInstance.sendToForeignBank(defaultAccount,receiverBankAddress,senderUser,receiverUser,amount).then(
+            getBalance());
+    
 }
 
 async function getPendingTransactions()

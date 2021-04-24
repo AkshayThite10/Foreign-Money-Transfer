@@ -4,8 +4,12 @@
 }
 
 .card-columns {
-    margin-left: 290px;
-    width: 2000px;
+    align-items: center;
+    margin: 10px;
+    margin-left: 25%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
 }
 
 #balance {
@@ -18,9 +22,9 @@
 }
 
 .div__balance {
+    align-items: center;
     display: flex;
     margin: 10px;
-    margin-right: 45px;
 }
 
 .input-group-append {
@@ -33,16 +37,12 @@
 
 #moneyDebit {
     margin-left: 15px;
-    padding-left: 13px;
-    width: 1046px;
-    border: 1px solid rgb(206, 197, 197);
-    border-radius: 5px;
 }
 
 .sendMoney {
-    margin-left: 65px;
     margin-top: 12px;
-    width: 1200px;
+    margin-left: 4%;
+    width: 100%;
 }
 
 .sendMoney_subTag {
@@ -53,13 +53,9 @@
 
 #pendingTransactionsBtn {
     margin-left: 15px;
+    margin-bottom: 10px;
 }
 
 #transaction {
     padding: 10px;
-}
-
-.pendingTransactions {
-    border: 2px solid red;
-    padding: 4px;
 }
